@@ -1,35 +1,35 @@
 def gravity(grid):
-    rows = len(grid)
-    columns = len(grid[0])
-    columns_list_upside_down = []
-    for i in range(columns):
-        col = []
-        for j in range(rows - 1, -1, -1):
-            col.append(grid[j][i])
-        columns_list_upside_down.append(col)
-    print('reformed to show falling apples:')
-    [print(x) for x in columns_list_upside_down]
-    for j in range(len(grid)):
-        for lst in columns_list_upside_down:
-            for i in range(len(lst) - 1):
-                pair = [lst[i], lst[i + 1]]
-                if 'a' not in pair or '#' in pair:
-                    continue
-                else:
-                    # a is in the list and # is not
-                    if pair[1] == 'a':
-                        lst[i], lst[i + 1] = lst[i + 1], lst[i]
-    print('gravity points left')
-    [print(x) for x in columns_list_upside_down]
-    row_list_right_side_up = []
-    for i in range(len(columns_list_upside_down[0]) - 1, -1, -1):
-        row =[]
-        for element in columns_list_upside_down:
-            row.append(element[i])
-        row_list_right_side_up.append(row)
-    print('reoriented:')
-    [print(x) for x in row_list_right_side_up]
+    lst = []
+    final_grid = []
+    for column in column_generator(grid):
+        prev_column = []
+        while prev_column != column:
+            prev_column = column
+            column = column_fixer(column)
+        lst.append(column)
+    final_grid = [x for x in column_rearranger(lst)]
+    print('final grid:')
+    [print(x) for x in final_grid]
 
+
+def column_generator(grid):
+    yield from ([grid[col][row] for col in range(len(grid))] for row in range(len(grid[0])))
+
+
+def column_fixer(column):
+    i = 0
+    new_column = [x for x in column]
+    while i < len(new_column) - 1:
+        pair = [new_column[i], new_column[i + 1]]
+        if '#' not in pair and pair[0] == 'a' and pair[1] != 'a':
+            # a is in the list and # is not and pair0=a
+            new_column[i], new_column[i + 1] = new_column[i + 1], new_column[i]
+        i += 1
+    return new_column
+
+
+def column_rearranger(column_list):
+    yield from ([column[i] for column in column_list] for i in range(len(column_list[0])))
 
 
 def main():
@@ -39,7 +39,8 @@ def main():
     #     grid=[]
     #     for i in range(int(row)):
     #         grid.append(input())
-    grid = [['a', 'a', 'a', 'a'], ['#', '.', 'a', '.'], ['.', '.', '.', 'a']]
+    # grid = [[1,0,1],[2,0,2],[3,0,3]]
+    grid = [['a', 'a', 'a', 'a'], ['#', '.', 'a', '.'], ['a', '.', '.', 'a'], ['.', '.', '.', 'a'], ]
     # grid = [['a', 'a', 'a', 'a'], ['a', 'a', 'a', '.'], ['a', 'a', '.', '.'], ['a', '.', '.', '.']]
     print('starting grid:')
     [print(x) for x in grid]
