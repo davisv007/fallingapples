@@ -12,6 +12,7 @@ def column_gen(grid):
     yield from ([grid[col][row] for col in range(len(grid))] for row in range(len(grid[0])))
 
 
+
 def fix_gen(fix_stepper, prev_column=[]):
     current_column = next(fix_stepper)
     while prev_column != current_column:
